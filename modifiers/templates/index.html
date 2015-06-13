@@ -1,0 +1,21 @@
+<h1>Enter URL and get modifier URL</h1>
+
+<p style="margin-top: 100">
+<form>
+  Ical URL: <input name='ical_url' type='text' size='100' value='{{ org_url }}'>
+  <br/>
+  <input type='submit'/>
+</form>
+</p>
+
+<p style="margin-top: 100">
+  <a href="{{ res_url }}">{{ res_url }}</a>
+</p>
+
+<ul>
+
+{% for greeting in greetings %}
+    <li>{{ greeting.when }}</li>
+{% endfor %}
+
+</ul>
