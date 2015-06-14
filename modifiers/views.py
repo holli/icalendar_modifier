@@ -1,4 +1,4 @@
-#from IPython import embed # use embed() to start a console
+from IPython import embed # use embed() to start a console
 import requests
 
 from django.shortcuts import render
@@ -29,8 +29,8 @@ def show(request):
     # response = HttpResponse(req_ical)
     response = HttpResponse()
     
-    copy_headers = ['content-disposition', 'content-encoding', 'date', 'content-type']
-    # copy_headers = ['content-disposition', 'date', 'content-type']
+    # copy_headers = ['content-disposition', 'content-encoding', 'date', 'content-type']
+    copy_headers = ['content-disposition', 'date', 'content-type']
     for key in copy_headers:
         response[key] = req_ical.headers[key]
 
