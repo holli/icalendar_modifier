@@ -2,6 +2,12 @@
 
 - E.g. you want to change multiday events to singleday events
 
+I'm having all my Facebook events in my Google calendar. Works fine except some
+people make events like "winter practices" that clutter calendar view. This app
+includes a small modifiers for your icalendar feeds to switch multiday events
+to take only couple hours.
+
+See live at https://icalendar-modifier.herokuapp.com/
 
 ## Running Locally
 
@@ -9,7 +15,6 @@ Make sure you have Python [installed properly](http://install.python-guide.org).
 
 ```sh
 $ pip install -r requirements.txt
-$ python manage.py migrate
 $ foreman start web
 ```
 
@@ -25,8 +30,4 @@ $ heroku open
 ```
 
 ## Documentation
-
-For more information about using Python on Heroku, see these Dev Center articles:
-
-- [Python on Heroku](https://devcenter.heroku.com/categories/python)
 
