@@ -1,4 +1,4 @@
-from IPython import embed # use embed() to start a console
+# from IPython import embed # use embed() to start a console
 import requests
 
 from django.shortcuts import render
@@ -15,7 +15,10 @@ def index(request):
     org_url = request.GET.get('ical_url')
     res_url = ''
     if org_url:
-        res_url = 'http://' + get_current_site(request).name + '/show?ical_url=' + urllib.quote(org_url)
+        # embed()
+        org_url = org_url.replace('webcal://', 'http://')
+        org_url_enc = urllib.parse.quote(org_url)
+        res_url = 'http://' + get_current_site(request).name + '/show?ical_url=' + org_url_enc
     else:
         org_url = ''
     return render(request, 'index.html', {'res_url': res_url, 'org_url': org_url})
