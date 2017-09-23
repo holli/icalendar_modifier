@@ -58,16 +58,14 @@ def show(request):
         # if end_time < datetime.datetime.now():
         #     continue
         if end_time > start_time + datetime.timedelta(days=3):
-            modified = True
             sc.__delitem__('DTEND')
             sc.add('DTEND', start_time + datetime.timedelta(days=3))
-            print("Modified DTEND: " + sc['UID'])
+            # print("Modified DTEND: " + sc['UID'])
         if sc['DESCRIPTION'] and len(sc['DESCRIPTION']) > 300:
-            modified = True
             src = sc['DESCRIPTION']
             sc.__delitem__('DESCRIPTION')
             sc.add('DESCRIPTION', src[0:190] + "..." + src[-100:-1])
-            print("Modified DESC: " + sc['UID'])
+            # print("Modified DESC: " + sc['UID'])
 
         ical.subcomponents.append(sc)
 
