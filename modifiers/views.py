@@ -8,6 +8,7 @@ import urllib
 from dateutil import parser
 import re
 import datetime
+import icalendar
 
 
 def index(request):
@@ -38,21 +39,39 @@ def show(request):
         response[key] = req_ical.headers[key]
 
     result = ''
-    lines = req_ical.text.split('\r\n')
-    for i in range(len(lines)-1):
-        start_str = re.search("DTSTART:(.*Z)", lines[i])
-        end_str = re.search("DTEND:(.*Z)", lines[i+1])
 
-        if bool(start_str) and bool(end_str):
-            start_time = parser.parse(start_str.group(1))
-            end_time =  parser.parse(end_str.group(1))
-            if (end_time-start_time) > datetime.timedelta(days = 4):
-                new_end_time = (start_time + datetime.timedelta(hours = 2)).strftime('%Y%m%dT%H%M%SZ')
-                lines[i+1] = lines[i+1].replace(end_str.group(1), new_end_time)
-                lines[i+3] = lines[i+3].replace("SUMMARY:", "SUMMARY:(CUT)")
-                print(lines[i+3])
-        result += lines[i] + "\n"
-    result += lines[len(lines)-1] + "\n"
+    # import ipdb; ipdb.set_trace()
+
+    ical = icalendar.Calendar.from_ical(req_ical.text)
+    # for it in ical.walk():
+    # for it in ical.items():
+    old_components = ical.subcomponents
+    ical.subcomponents = []
+
+    for sc in old_components:
+
+        if type(sc) != icalendar.cal.Event:
+            ical.subcomponents.append(sc)
+
+        start_time = sc['DTSTART'].dt.replace(tzinfo=None)
+        end_time = sc['DTEND'].dt.replace(tzinfo=None)
+        # if end_time < datetime.datetime.now():
+        #     continue
+        if end_time > start_time + datetime.timedelta(days=3):
+            modified = True
+            sc.__delitem__('DTEND')
+            sc.add('DTEND', start_time + datetime.timedelta(days=3))
+            print("Modified DTEND: " + sc['UID'])
+        if sc['DESCRIPTION'] and len(sc['DESCRIPTION']) > 300:
+            modified = True
+            src = sc['DESCRIPTION']
+            sc.__delitem__('DESCRIPTION')
+            sc.add('DESCRIPTION', src[0:190] + "..." + src[-100:-1])
+            print("Modified DESC: " + sc['UID'])
+
+        ical.subcomponents.append(sc)
+
+    result = ical.to_ical()
 
     response.write(result)
     

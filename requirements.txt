@@ -11,6 +11,6 @@ Django>1.11
 requests>2.18
 gunicorn==19.7.1
 python-dateutil>2.3.0
-
+icalendar==3.11.7
 
 # iPython
